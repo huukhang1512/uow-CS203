@@ -14,7 +14,7 @@ void merge(KeyValueEntry *arr, int start, int mid, int end){
     for (int j = 0; j < rightSize; j++)
         right[j] = arr[mid + 1 + j];
     
-    int i = 0, j = 0, k = start; //left subarray, right subarray, merged array
+    int i = 0, j = 0, k = start; //left subarray index, right subarray index, merged array index
     while(i < leftSize && j < rightSize) {
         int leftVal = left[i].getValue();
         int rightVal = right[j].getValue();
@@ -31,6 +31,7 @@ void merge(KeyValueEntry *arr, int start, int mid, int end){
         }
         k++;
     }
+    // append the remaining items of the subarrays to the array
     while(i < leftSize){
         arr[k++] = left[i++];
     }
@@ -43,7 +44,6 @@ void mergeSort(KeyValueEntry *arr, int start, int end){
     if(start >= end){
         return;
     }
-
     int mid = start + (end - start) / 2;
     mergeSort(arr, start, mid);
     mergeSort(arr, mid + 1, end);

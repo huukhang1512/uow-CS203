@@ -8,32 +8,30 @@ class KeyValueEntry {
         const char* key;
         int value;
     public:
+        KeyValueEntry* nextItr;
         KeyValueEntry* next;
+
         KeyValueEntry(){}
         KeyValueEntry(const char* _key, int _value){
             key = _key;
             value = _value;
+            nextItr = nullptr;
             next = nullptr;
-        }
-        KeyValueEntry(const KeyValueEntry& keyVal){
-            key = keyVal.key;
-            value = keyVal.value;
-            next = keyVal.next;
         }
 
         void setEntry(const char* _key, int _value){
-            value = _value;
             key = _key;
+            value = _value;
         }
-        void setKey(const char* _key){
-            this->key = _key;
+
+        void setValue(int _value){
+            value = _value;
         }
-        void setValue(int value){
-            this->value = value;
-        }
+
         int getValue(){
             return value;
         }
+
         const char* getKey(){
             return key;
         }

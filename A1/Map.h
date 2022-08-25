@@ -2,7 +2,6 @@
 #define CharArrayMap_H
 #include "KeyValueEntry.h"
 #include "Bucket.h"
-#include <memory>
 #include <iostream>
 class CharArrayMap {
     private:
@@ -44,8 +43,8 @@ class CharArrayMap {
                     begin = keyVal;
                     end = keyVal;
                 } else {
-                    end->next = keyVal;
-                    end = end->next;
+                    end->nextItr = keyVal;
+                    end = end->nextItr;
                 }
                 size++;
             }
@@ -58,7 +57,6 @@ class CharArrayMap {
             return -1;
         };
         bool containsKey(const char* key){
-            int hash = getHash(key);
             return getEntry(key) != nullptr;
         }
 };

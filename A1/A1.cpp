@@ -26,71 +26,90 @@ int main(int argc, char *argv[]) {
             throw std::invalid_argument("Please provide a valid arguments stated below: \n ./main <path_to_txt_file>");
             return 1;
         }
+        // Read File and construct string pool
         ifstream textFile = openNewFile(argv[1]);
         const int MAX_WORD_LENGTH = 45; // longest possible word length
         const int MAX_NUM_OF_WORDS = 50000;  // maximum constraint
-        char stringPool [MAX_NUM_OF_WORDS][MAX_WORD_LENGTH];
+        const int MAX_NUM_OF_CHAR = 100000;
+
+        char stringPool[MAX_NUM_OF_CHAR];
+        int length[MAX_NUM_OF_WORDS];
         char text[MAX_WORD_LENGTH];
         
         int wordNum = 0;
-        int curIndex = 0;
+        int curStringPoolIndex = 0;
         while(textFile >> text){
-            int i=0;
+            int i = 0;
+            int textLength = 0;
             while(text[i] != '\0'){
                 if(isalpha(text[i])){
-                    stringPool[wordNum][curIndex++] = tolower(text[i]);
+                    stringPool[curStringPoolIndex++] = tolower(text[i]);
+                    textLength++;
                 }
                 i++;
             }
-            stringPool[wordNum][curIndex] = '\0'; // null terminate
-            wordNum++;
-            curIndex = 0; 
+            length[wordNum++] = textLength;
         }
+
+        // Create a Map to store the occurence of words
         CharArrayMap map;
+        int start = 0;
         for(int i=0; i < wordNum; i++){
-            if(map.containsKey(stringPool[i])){
-                int count = map.get(stringPool[i]);
-                map.put(stringPool[i], count+1);
+            char * curString = new char[length[i]];
+            for(int j = 0; j < length[i]; j++){
+                curString[j] =  stringPool[start + j];
+            }
+            // get the start of the next word
+            start += length[i]; 
+
+            // update the count of the string in the hashmap.
+            if(map.containsKey(curString)){
+                int count = map.get(curString);
+                map.put(curString, count+1);
             } else {
-                map.put(stringPool[i], 1);
+                map.put(curString, 1); // create a new entry in the hashmap
             }
         }
         KeyValueEntry * begin = map.begin;
         KeyValueEntry * entries = new KeyValueEntry[map.getSize()];
 
-        //create an array of map items
+        // Create an array of map items
         int i = 0;
         while(begin != nullptr){
             entries[i++].setEntry(begin->getKey(), begin->getValue());
-            begin = begin->next;
+            begin = begin->nextItr;
         }
+
+        // Sort
         mergeSort(entries, 0, map.getSize() - 1);
-        int k = map.getSize() < 10 ? map.getSize() : 10; // handle the case where there are less than 10 words
-        cout << "List of first 10 most frequent words:" << endl;
+
+        int k = map.getSize() < 10 ? map.getSize() : 10; // handle the edge case where there are less than 10 words
+
+        cout << "Number of words: " << wordNum << endl;
+        cout << "List of first 10 words in the sorted list:" << endl;
         for(int i = 0; i < k; i++){
             const char * key = entries[i].getKey();
             const int value = entries[i].getValue();
             cout << key << ": " << value << endl;
         }
+
         cout << "..." << endl;
-        cout << "List of last 10 most frequent words:" << endl;
-        for(int i = map.getSize() - 1; i >= map.getSize() - k; i--){
+        cout << "List of 10 last words in the sorted list:" << endl;
+        for(int i = map.getSize() - k; i < map.getSize(); i++){
             const char * key = entries[i].getKey();
             const int value = entries[i].getValue();
             cout << key << ": " << value << endl;
         }
         cout << "..." << endl;
         cout << "List of unique words (only appear once):" << endl;
-        int count = 0;
-        for(int i = map.getSize() - 1; i >= 0; i--){
+        for(int i = map.getSize() - 1; entries[i].getValue() == 1 ; i--){
             const char * key = entries[i].getKey();
-            const int value = entries[i].getValue();
-            if(value != 1){
-                break;
+            cout << key;
+            if(i-1 >= 0 && entries[i-1].getValue() == 1){
+                cout << ", ";
             }
-            count++;
-            cout << key << endl;
         }
+        cout << endl;
         delete[] entries;
         return 0;
     }

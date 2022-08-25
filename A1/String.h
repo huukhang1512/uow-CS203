@@ -9,6 +9,7 @@ int strlen(const char* str){
     }
     return count;
 }
+
 bool isEqual(const char* str1, const char* str2){
     int str1Size = strlen(str1);
     int str2Size = strlen(str2);

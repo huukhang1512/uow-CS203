@@ -4,37 +4,34 @@
 #include "String.h"
 class CharArrayBucket {
     private: 
-        const static int CAPACITY = 10;
-        KeyValueEntry entries [CAPACITY];
-        int size = 0;
+        KeyValueEntry *begin, *end; //head and tail of the linkedlist
     public: 
-        CharArrayBucket(){}
+        CharArrayBucket(){
+            begin = nullptr;
+            end = nullptr;
+        }
+
         KeyValueEntry* getEntry(const char* key){
-            for(int i=0; i < size; i++){
-                if(isEqual(entries[i].getKey(), key)){
-                    return &entries[i];
+            KeyValueEntry * keyVal = begin;
+            while(keyVal != nullptr){
+                if(isEqual(keyVal->getKey(), key)){
+                    return keyVal;
                 }
+                keyVal = keyVal->next;
             }
             return nullptr;
         };
-        int getSize(){
-            return size;
-        }
+
         KeyValueEntry * addEntry(const char* key, int value){
-            entries[size].setKey(key);
-            entries[size].setValue(value);
-            size++;
-            return &entries[size-1];
-        }
-        void removeEntry(KeyValueEntry entry){
-            for(int i=0; i < size; i++){
-                if(isEqual(entries[i].getKey(), entry.getKey())){
-                    for(int j = 0; j < size; j++){
-                        entries[j] = entries[j+1];
-                    }
-                    break;
-                }
+            KeyValueEntry * keyVal = new KeyValueEntry(key,value);
+            if(begin == nullptr){ // Linked List is empty
+                begin = keyVal;
+                end = keyVal;
+            } else {
+                end->next = keyVal;
+                end = end->next;
             }
+            return keyVal;
         }
 };
 #endif
