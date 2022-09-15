@@ -3,6 +3,7 @@
 #include <queue>
 #include <ctime>
 #include <vector>
+#include <cmath>
 
 using std::exception;
 using std::cout;
@@ -11,6 +12,7 @@ using std::ifstream;
 using std::priority_queue;
 using std::queue;
 using std::vector;
+using std::max;
 
 ifstream openNewFile(char* filePath){
 
@@ -59,6 +61,8 @@ class Teller {
     public:
         bool isBusy=false;
         int served=0;
+        float finishedAt=0.0;
+        float idleTime=0.0;
         Teller(){}
 };
 
@@ -82,11 +86,10 @@ class Comparison {
     }
 };
 
-int getAvailableIndex(Teller tellers[], int numOfTeller){
+int availableTeller(Teller tellers[], int numOfTeller){
     for(int i = 0; i < numOfTeller; i++){
-                if(!tellers[i].isBusy)
-                       return i;
-        }
+        if(!tellers[i].isBusy) return i;
+    }
     return -1;
 }
 
@@ -98,66 +101,99 @@ int main(int argc, char *argv[]) {
         }
         ifstream file = openNewFile(argv[1]);
 
-        int numOfTeller = 3;
+        int numOfTeller = 4;
+        int numOfCustomer = 0;
         float curArrival, curServiceTime;
         int curPriority;
         
         queue<Customer> customers;
-        priority_queue<Event,vector<Event>, Comparison> events;
+        priority_queue<Event,vector<Event>, Comparison> eventsHeap;
+        priority_queue<Customer,vector<Customer>, Compare> customersHeap;
 
-        int size=0;
         while (file >> curArrival >> curServiceTime >> curPriority){
             Customer customer(curArrival,curServiceTime,curPriority);
             Event event(curArrival,EventType::a);
+
             customers.push(customer);
-            events.push(event);
+            eventsHeap.push(event);
+            numOfCustomer++;
         }
 
         Teller tellers[numOfTeller];
         float curTime = 0.0;
 
-        priority_queue<Customer,vector<Customer>, Compare> heap;
-
-        int j = 0;
-        while(!events.empty()){
-            j++;
-            Event event = events.top();
-            events.pop();
+        int maxHeapLength = 0;
+        float totalCustomerWaitingTime = 0.0;
+        float totalCustomerServiceTime = 0.0;
+        float totalTellersIdleTime = 0.0;
+        while(!eventsHeap.empty()){
+            maxHeapLength = fmax(maxHeapLength , customersHeap.size());
+            Event event = eventsHeap.top();
+            eventsHeap.pop();
             curTime = event.firedTime;
             int server = event.server;
-            
             if(event.type == EventType::a){
-                int availableServerIndex = getAvailableIndex(tellers,numOfTeller);
+                int availableServerIndex = availableTeller(tellers,numOfTeller);
                 Customer customer = customers.front();
                 customers.pop();
                 if(availableServerIndex == -1){
-                    heap.push(customer);
+                    customersHeap.push(customer);
                 } else {
+                    // process the customer right away
                     float finished = curTime + customer.serviceTime;
+
                     Event departureEvent(finished,EventType::d,availableServerIndex);
+                    eventsHeap.push(departureEvent);
+
                     tellers[availableServerIndex].isBusy = true;
-                    events.push(departureEvent);
                     tellers[availableServerIndex].served++;
+                    tellers[availableServerIndex].idleTime += curTime - tellers[availableServerIndex].finishedAt;
+                    tellers[availableServerIndex].finishedAt = finished;
+
+                    totalCustomerServiceTime += customer.serviceTime;
                 }
             } else {
-                tellers[server].isBusy = false;
-                if(!heap.empty()){
-                    Customer customer = heap.top();
-                    heap.pop();
+                // teller finished with the departure event, process next customer currently queue up if any
+                if(!customersHeap.empty()){
+
+                    Customer customer = customersHeap.top();
+                    customersHeap.pop();
+
                     float finished = curTime + customer.serviceTime;
-                    tellers[server].isBusy = true;
+                    float waitingTime = curTime - customer.arrivalTime;
 
                     Event departureEvent(finished,EventType::d, server);
-                    events.push(departureEvent);
+                    eventsHeap.push(departureEvent);
+
+                    tellers[server].isBusy = true;
                     tellers[server].served++;
+                    tellers[server].finishedAt = finished;
+
+                    totalCustomerServiceTime += customer.serviceTime;
+                    totalCustomerWaitingTime += waitingTime;
+                } else {
+                    tellers[server].isBusy = false;
                 }
 
             }
         }
-       
+        cout << totalCustomerWaitingTime << endl;
+        cout << "Total simulated time              = " << curTime << endl;
+        cout << "Total serving time                = " << totalCustomerServiceTime << endl;
+        cout << "Total idle time                   = " << totalTellersIdleTime << endl;
+        cout << "Average serving time per customer = " << totalCustomerServiceTime/numOfCustomer << endl;
+        cout << "Average waiting time per customer = " << totalCustomerWaitingTime/numOfCustomer << endl;
+        cout << "Maximum length of queue           = " << maxHeapLength << endl;
+        cout << "Average length of queue           = " << totalCustomerWaitingTime/curTime << endl;
+        cout << endl;
         for(int i = 0; i < numOfTeller; i++){
-            cout << "Number of customers served by teller #" << i << ": " << tellers[i].served << endl;
+            cout << "Statistic of Teller #" << i << ":" << endl;
+            cout << "\t Number of customers served = " << tellers[i].served << endl;
+            cout << "\t Total idle time            = " << tellers[i].idleTime<< endl;
+            cout << "\t Idle rate                  = " << endl;
+
         }
+
     } catch (exception &e) {
         cout << e.what() << endl;
         return 1;
