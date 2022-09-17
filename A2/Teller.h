@@ -3,7 +3,7 @@
 
 class Teller {
     private:
-        int id;
+        int id=-1;
         int served;
         float totalServedTime;
         float finishedAt;

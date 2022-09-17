@@ -31,8 +31,8 @@ class Simulation {
 
     private:
         void processArrival(Customer &customer);
-        void processDeparture(int availableTeller);
+        void processDeparture(Teller teller);
         void serve(Customer *customer, Teller *teller, float finishedTime);
-        int availableTeller();
+        Teller availableTeller();
 };
 #endif

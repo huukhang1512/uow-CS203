@@ -2,6 +2,7 @@
 Teller::Teller(){
     served = 0;
     totalServedTime = 0.0;
+    finishedAt = 0.0;
 }
 
 int Teller::getTotalServed(){
