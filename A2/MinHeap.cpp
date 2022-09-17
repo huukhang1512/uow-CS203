@@ -9,6 +9,8 @@ MinHeap<T>::MinHeap(int capacity){
     heap = new T[capacity];
     heapSize = 0;
 }
+
+// Helper functions
 template<class T>
 int MinHeap<T>::parent(int i){
     return (i-1) / 2;
@@ -24,6 +26,7 @@ int MinHeap<T>::right(int i){
     return (2 * i + 2);
 }
 
+// Push new item to the heap
 template<class T>
 void MinHeap<T>::push(T newItem){
     heapSize++;
@@ -31,6 +34,7 @@ void MinHeap<T>::push(T newItem){
     heapifyUp();
 }
 
+// Remove and then return the heap's root 
 template<class T>
 T MinHeap<T>::pop(){
     T root = heap[0];
@@ -40,6 +44,7 @@ T MinHeap<T>::pop(){
     return root;
 }
 
+// Get the root element
 template<class T>
 T MinHeap<T>::peek(){
     return heap[0];
@@ -62,6 +67,7 @@ void MinHeap<T>::swap(T *parent, T *child){
     *child = tmp;
 }
 
+// heapify function
 template<class T>
 void MinHeap<T>::heapifyDown(int i){
     int l = left(i);
@@ -85,6 +91,7 @@ void MinHeap<T>::heapifyUp(){
         index = parent(index);
     }
 }
+// explicit instantiation for Customer/Event/Teller
 template class MinHeap<Customer>;
 template class MinHeap<Event>;
 template class MinHeap<Teller>;

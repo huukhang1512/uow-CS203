@@ -3,7 +3,6 @@
 
 class Teller {
     private:
-        int id=-1;
         int served;
         float totalServedTime;
         float finishedAt;
@@ -11,13 +10,13 @@ class Teller {
         int getTotalServed();
         float getTotalServedTime();
         float getFinishedAt();
-        void setId(int _id);
-        int getId();
         void serve(float finishedTime, float servedTime);
         Teller();
+        // A teller is less than other when they finished their work first
         friend bool operator<(Teller a, Teller b){
             return a.finishedAt < b.finishedAt;
         }
+        // A teller is less than other when they finished their work later
         friend bool operator>(Teller a, Teller b){
             return a.finishedAt > b.finishedAt;
         }

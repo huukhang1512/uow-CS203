@@ -17,14 +17,6 @@ float Teller::getFinishedAt(){
     return finishedAt;
 }
 
-void Teller::setId(int _id){
-    id = _id;
-}
-
-int Teller::getId(){
-    return id;
-}
-
 void Teller::serve(float finishedTime, float servedTime){
     served++;
     finishedAt = finishedTime;

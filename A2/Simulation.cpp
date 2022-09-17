@@ -1,9 +1,8 @@
 #include "Simulation.h"
-#include <cmath>
 #include <iostream>
 using std::cout;
+using std::ofstream;
 using std::endl;
-using std::fmax;
 
 ifstream openNewFile(char* filePath){
 
@@ -17,23 +16,22 @@ ifstream openNewFile(char* filePath){
 }
 
 Simulation::Simulation(int _numOfTellers, char *filePath){
-    tellers = new Teller[_numOfTellers];
     tellersHeap = new MinHeap<Teller>(_numOfTellers);
     customers = new Customer[100];
-    eventsHeap = new MinHeap<Event>(100);
+    eventsHeap = new MinHeap<Event>(200);
     customersHeap = new MinHeap<Customer>(100);
+
     numOfTellers = _numOfTellers;
     float curArrival, curServiceTime;
     int curPriority;
     ifstream file = openNewFile(filePath);
     while (file >> curArrival >> curServiceTime >> curPriority){
-        Event event(curArrival, EventType::a);
+        Event event(curArrival, EventType::A);
         customers[numOfCustomer++].setCustomerData(curArrival, curServiceTime, curPriority);
         eventsHeap->push(event);
     }
     for (int i = 0; i < numOfTellers; i++){
         Teller teller;
-        teller.setId(i);
         tellersHeap->push(teller);
     }
 }
@@ -41,6 +39,8 @@ Simulation::Simulation(int _numOfTellers, char *filePath){
 void Simulation::serve(Customer *customer, Teller *teller, float finishedTime){
     teller->serve(finishedTime, customer->getServiceTime());
     totalCustomerServiceTime += customer->getServiceTime();
+    Event departureEvent(finishedTime, EventType::D, *teller);
+    eventsHeap->push(departureEvent);
 }
 
 void Simulation::processArrival(Customer &customer){
@@ -51,10 +51,6 @@ void Simulation::processArrival(Customer &customer){
         float finished = curTime + customer.getServiceTime();
         Teller teller = tellersHeap->pop();
         serve(&customer, &teller, finished);
-
-        Event departureEvent(finished, EventType::d, teller);
-        eventsHeap->push(departureEvent);
-
     }
 }
 
@@ -66,10 +62,6 @@ void Simulation::processDeparture(Teller teller){
         float finished = curTime + customer.getServiceTime();
         float waitingTime = curTime - customer.getArrivalTime();
         serve(&customer, &teller, finished);
-
-        Event departureEvent(finished, EventType::d, teller);
-        eventsHeap->push(departureEvent);
-
         totalCustomerWaitingTime += waitingTime;
     } else {
         tellersHeap->push(teller);
@@ -79,15 +71,14 @@ void Simulation::processDeparture(Teller teller){
 void Simulation::beginSimulation(){
     int curCustomer = 0;
     while (!eventsHeap->empty()){
-        maxHeapLength = fmax(maxHeapLength, customersHeap->size());
+        maxHeapLength = maxHeapLength < customersHeap->size() ? customersHeap->size() : maxHeapLength;
         Event event = eventsHeap->pop();
-        cout << event.firedTime << " "<< event.type << " " << event.server.getId() << endl;
-        curTime = event.firedTime;
         Teller server = event.server;
+        curTime = event.firedTime;
 
-        if (event.type == EventType::a){
+        if (event.type == EventType::A){
             processArrival(customers[curCustomer++]);
-        } else if (event.type == EventType::d){
+        } else if (event.type == EventType::D){
             processDeparture(server);
         }
     }
@@ -101,9 +92,10 @@ void Simulation::report(){
     cout << "Maximum length of queue           = " << maxHeapLength << endl;
     cout << "Average length of queue           = " << totalCustomerWaitingTime / curTime << endl;
     cout << endl;
+    int i = 0;
     while(!tellersHeap->empty()){
         Teller teller = tellersHeap->pop();
-        cout << "Statistic of Teller #" << teller.getId() << ":" << endl;
+        cout << "Statistic of Teller #" << i++ << ":" << endl;
         cout << "\t Number of customers served = " << teller.getTotalServed() << endl;
         cout << "\t Total idle time            = " << curTime - teller.getTotalServedTime() << endl;
         cout << "\t Idle rate                  = " << (curTime - teller.getTotalServedTime()) / curTime << endl;

@@ -1,0 +1,59 @@
+➜  A2 git:(master) ✗ ./main  ./data/a2-sample.txt 1    
+Loading file from path ./data/a2-sample.txt...
+Total simulated time              = 1282.57
+Total serving time                = 1279.83
+Average serving time per customer = 12.7983
+Average waiting time per customer = 361.906
+Maximum length of queue           = 57
+Average length of queue           = 28.2173
+
+Statistic of Teller #0:
+        Number of customers served = 100
+        Total idle time            = 2.73877
+        Idle rate                  = 0.00213538
+
+
+➜  A2 git:(master) ✗ ./main  ./data/a2-sample.txt 2 
+Loading file from path ./data/a2-sample.txt...
+Total simulated time              = 653.311
+Total serving time                = 1279.83
+Average serving time per customer = 12.7983
+Average waiting time per customer = 60.3841
+Maximum length of queue           = 22
+Average length of queue           = 9.24279
+
+Statistic of Teller #0:
+        Number of customers served = 48
+        Total idle time            = 16.1566
+        Idle rate                  = 0.0247303
+Statistic of Teller #1:
+        Number of customers served = 52
+        Total idle time            = 10.6362
+        Idle rate                  = 0.0162804
+
+
+➜  A2 git:(master) ✗ ./main  ./data/a2-sample.txt 4 
+Loading file from path ./data/a2-sample.txt...
+Total simulated time              = 531.161
+Total serving time                = 1279.83
+Average serving time per customer = 12.7983
+Average waiting time per customer = 0.25181
+Maximum length of queue           = 1
+Average length of queue           = 0.0474074
+
+Statistic of Teller #0:
+        Number of customers served = 20
+        Total idle time            = 184.96
+        Idle rate                  = 0.348217
+Statistic of Teller #1:
+        Number of customers served = 28
+        Total idle time            = 238.072
+        Idle rate                  = 0.448211
+Statistic of Teller #2:
+        Number of customers served = 25
+        Total idle time            = 204.522
+        Idle rate                  = 0.385047
+Statistic of Teller #3:
+        Number of customers served = 27
+        Total idle time            = 217.263
+        Idle rate                  = 0.409034

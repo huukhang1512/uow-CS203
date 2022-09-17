@@ -10,13 +10,22 @@ class Customer {
         Customer(){
             arrivalTime = 0.0;
             serviceTime = 0.0;
-            priority = 1;
+            priority = -1;
         };
         friend bool operator<(Customer a, Customer b){
-            return a.priority < b.priority || a.arrivalTime > b.arrivalTime;
+            if(a.priority < b.priority) {
+                return false;
+            }
+            if(a.priority == b.priority) {
+                return a.arrivalTime < b.arrivalTime;
+            }
+            return true;
+        }
+        friend bool operator==(Customer a, Customer b){
+            return a.priority == b.priority && a.arrivalTime == b.arrivalTime;
         }
         friend bool operator>(Customer a, Customer b){
-            return a.priority > b.priority || a.arrivalTime < b.arrivalTime;
+            return !(a < b || a == b);
         }
         float getArrivalTime();
         float getServiceTime();

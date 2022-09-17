@@ -10,6 +10,11 @@ using std::ifstream;
 
 class Simulation {
     public:
+        void beginSimulation();
+        void report();
+        Simulation(int numOfTellers, char *filePath);
+
+    private:
         float totalCustomerServiceTime = 0.0;
         float totalCustomerWaitingTime = 0.0;
         float totalTellersIdleTime = 0.0;
@@ -25,11 +30,6 @@ class Simulation {
         MinHeap<Event> *eventsHeap;
         MinHeap<Customer> *customersHeap;
 
-        void beginSimulation();
-        void report();
-        Simulation(int numOfTellers, char *filePath);
-
-    private:
         void processArrival(Customer &customer);
         void processDeparture(Teller teller);
         void serve(Customer *customer, Teller *teller, float finishedTime);

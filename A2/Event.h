@@ -1,7 +1,7 @@
 #ifndef Event_H
 #define Event_H
 #include "Teller.h"
-enum EventType {a,d};
+enum EventType {A,D}; // Arrival | Departure
 
 class Event {
     public:
@@ -14,8 +14,11 @@ class Event {
         friend bool operator<(Event a, Event b){
             return a.firedTime < b.firedTime;
         }
+        friend bool operator==(Event a, Event b){
+            return a.firedTime == b.firedTime;
+        }
         friend bool operator>(Event a, Event b){
-            return a.firedTime > b.firedTime;
+            return !(a < b || a == b);
         }
 };
 

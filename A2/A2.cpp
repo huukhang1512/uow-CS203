@@ -12,8 +12,11 @@ int main(int argc, char *argv[]){
             throw std::invalid_argument("Please provide a valid arguments stated below: \n ./main <path_to_txt_file> <number_of_tellers>");
             return 1;
         }
+        // read from CLI
         int numOfTeller = std::stoi(argv[2]);
-        Simulation simulation(numOfTeller, argv[1]);
+        char *filePath =  argv[1];
+
+        Simulation simulation(numOfTeller,filePath);
         simulation.beginSimulation();
         simulation.report();
     }

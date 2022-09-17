@@ -6,7 +6,10 @@
 - Compiler: gcc version 11.2.0
 
 ## Compile the program:
-> g++ *.cpp
+> g++ *.cpp -o main
 
 ## Execute the program:
-> ./a.out `<path to text file> <number of tellers>`
+> ./main `<path to text file> <number of tellers>`
+
+For example, execute the program on text file in path `./data/a2-sample.txt`, with `4 tellers`:
+> ./main  ./data/a2-sample.txt 4
