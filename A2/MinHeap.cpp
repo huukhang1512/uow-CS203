@@ -31,7 +31,7 @@ template<class T>
 void MinHeap<T>::push(T newItem){
     heapSize++;
     heap[heapSize-1] = newItem;
-    heapifyUp();
+    heapifyUp(heapSize-1);
 }
 
 // Remove and then return the heap's root 
@@ -84,11 +84,10 @@ void MinHeap<T>::heapifyDown(int i){
 }
 
 template<class T>
-void MinHeap<T>::heapifyUp(){
-    int index = heapSize - 1;
-    while(index != 0 && heap[parent(index)] > heap[index]){
-        swap(&heap[parent(index)],&heap[index]);
-        index = parent(index);
+void MinHeap<T>::heapifyUp(int i){
+    if(i && heap[parent(i)] > heap[i]){
+        swap(&heap[parent(i)],&heap[i]);
+        heapifyUp(parent(i));
     }
 }
 // explicit instantiation for Customer/Event/Teller

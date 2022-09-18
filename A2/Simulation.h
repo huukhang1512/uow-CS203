@@ -20,11 +20,10 @@ class Simulation {
         float totalTellersIdleTime = 0.0;
         float curTime = 0.0;
 
-        int maxHeapLength = 0;
-        int numOfCustomer = 0;
+        int maxCustomerQueueSize = 0;
+        int numOfCustomers = 0;
         int numOfTellers = 0;
 
-        Teller *tellers;
         Customer *customers;
         MinHeap<Teller> *tellersHeap;
         MinHeap<Event> *eventsHeap;

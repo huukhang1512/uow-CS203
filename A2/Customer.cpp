@@ -9,8 +9,15 @@ float Customer::getServiceTime(){
 int Customer::getPriority(){
     return priority;
 }
-void Customer::setCustomerData(float _arrivalTime, float _serviceTime, int _priority){
+
+Customer::Customer(float _arrivalTime, float _serviceTime, int _priority){
     arrivalTime = _arrivalTime;
     serviceTime = _serviceTime;
     priority = _priority;
+}
+
+Customer::Customer(){
+    arrivalTime = 0.0;
+    serviceTime = 0.0;
+    priority = -1;
 }

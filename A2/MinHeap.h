@@ -9,6 +9,9 @@ class MinHeap {
         int parent(int i);
         int left(int i);
         int right(int i);
+        void swap(T *parent, T *child);
+        void heapifyDown(int i);
+        void heapifyUp(int i);
     public:
         MinHeap(int capacity);
         void push(T newItem);
@@ -16,9 +19,6 @@ class MinHeap {
         T peek();
         int size();
         bool empty();
-        void swap(T *parent, T *child);
-        void heapifyDown(int i);
-        void heapifyUp();
 };
 
 #endif

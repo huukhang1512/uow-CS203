@@ -1,4 +1,6 @@
-➜  A2 git:(master) ✗ ./main  ./data/a2-sample.txt 1    
+➜  A2 git:(master) ✗ ./main           
+Please enter the path to the text file (max 50 characters): ./data/a2-sample.txt
+Please enter the number of tellers: 1
 Loading file from path ./data/a2-sample.txt...
 Total simulated time              = 1282.57
 Total serving time                = 1279.83
@@ -11,9 +13,9 @@ Statistic of Teller #0:
         Number of customers served = 100
         Total idle time            = 2.73877
         Idle rate                  = 0.00213538
-
-
-➜  A2 git:(master) ✗ ./main  ./data/a2-sample.txt 2 
+➜  A2 git:(master) ✗ ./main 
+Please enter the path to the text file (max 50 characters): ./data/a2-sample.txt
+Please enter the number of tellers: 2
 Loading file from path ./data/a2-sample.txt...
 Total simulated time              = 653.311
 Total serving time                = 1279.83
@@ -31,8 +33,9 @@ Statistic of Teller #1:
         Total idle time            = 10.6362
         Idle rate                  = 0.0162804
 
-
-➜  A2 git:(master) ✗ ./main  ./data/a2-sample.txt 4 
+➜  A2 git:(master) ✗ ./main 
+Please enter the path to the text file (max 50 characters): ./data/a2-sample.txt
+Please enter the number of tellers: 4
 Loading file from path ./data/a2-sample.txt...
 Total simulated time              = 531.161
 Total serving time                = 1279.83

@@ -20,5 +20,10 @@ class Teller {
         friend bool operator>(Teller a, Teller b){
             return a.finishedAt > b.finishedAt;
         }
+        friend bool operator==(Teller a, Teller b){
+            return a.finishedAt == b.finishedAt &&
+                a.served == b.served &&
+                a.totalServedTime == b.totalServedTime;
+        }
 };
 #endif
